@@ -33,9 +33,9 @@ export function getNextDeparture(
 
   // 첫차까지 60분을 넘게 기다려야 하는 새벽 시간대는 운행 종료로 취급.
 
-  // if (departure === firstDeparture && remainingSeconds > 60 * 60) {
-  //   return null;
-  // }
+  if (departure === firstDeparture && remainingSeconds > 60 * 60) {
+    return null;
+  }
 
   return {
     departure,

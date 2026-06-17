@@ -44,7 +44,7 @@ export default function RailMap() {
                   isSelected ? "!text-daejeon-ink/85" : "!text-daejeon-ink/75",
                 )}
               >
-                {station.displayName}
+                {station.name}
               </span>
             </Link>
           );
