@@ -16,7 +16,7 @@ export type TrainDirection = "towardPanam" | "towardBanseok";
 // tmList의 분 단위 항목 cf) "32(판암)"처럼 종착 메모가 붙는 값도 있음
 export type TimetableMinute = {
   minute: number;
-  note: string | null;
+  finalDestination: string | null;
   raw: string;
 };
 
@@ -33,7 +33,8 @@ export type TimetableItem = {
 export type DepartureTime = {
   hour: number;
   minute: number;
-  note: string | null;
+  finalDestination: string;
+  isLastTrain: boolean;
   raw: string;
   minutesFromMidnight: number; //이게 중요함 - 자정부터 도착시간까지의 시간을 분으로 계산
 };
@@ -60,6 +61,7 @@ export type StationArrivalSchedule = {
 // 출발 시각 목록에서 가장 가까운 다음 열차를 계산한 결과
 export type NextDeparture = {
   departure: DepartureTime;
+  remainingSeconds: number;
   remainingMinutes: number;
   arrivalTimeLabel: string;
 };

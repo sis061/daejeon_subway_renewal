@@ -31,18 +31,23 @@ export function parseTimetableMinute(rawMinute: string): TimetableMinute {
 
   return {
     minute: Number(match[1]),
-    note: match[2] ?? null,
+    finalDestination: match[2] ?? null,
     raw: rawMinute,
   };
 }
 
 export function normalizeTimetableItem(raw: RawTimetableItem): TimetableItem {
+  const normalizeMinutes = raw.tmList
+    .split(" ")
+    .filter(Boolean)
+    .map(parseTimetableMinute);
+
   return {
     stationId: Number(raw.stNum),
     dayType: normalizeDayType(raw.dayType),
     direction: normalizeDirection(raw.drctType),
     hour: Number(raw.tmZone),
-    minutes: raw.tmList.split(" ").filter(Boolean).map(parseTimetableMinute),
+    minutes: normalizeMinutes,
   };
 }
 

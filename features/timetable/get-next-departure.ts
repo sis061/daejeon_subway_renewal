@@ -5,8 +5,8 @@
 
 import type { DepartureTime, NextDeparture } from "./timetable.types";
 
-function getMinutesFromMidnight(date: Date) {
-  return date.getHours() * 60 + date.getMinutes();
+function getSecondsFromMidnight(date: Date) {
+  return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
 }
 
 function formatTimeLabel(hour: number, minute: number) {
@@ -19,18 +19,28 @@ export function getNextDeparture(
   departures: DepartureTime[],
   now: Date,
 ): NextDeparture | null {
-  const nowMinutes = getMinutesFromMidnight(now);
+  const nowSeconds = getSecondsFromMidnight(now);
+  const firstDeparture = departures[0];
   const departure = departures.find(
-    (item) => item.minutesFromMidnight >= nowMinutes,
+    (item) => item.minutesFromMidnight * 60 >= nowSeconds,
   );
 
   if (!departure) {
     return null;
   }
 
+  const remainingSeconds = departure.minutesFromMidnight * 60 - nowSeconds;
+
+  // 첫차까지 60분을 넘게 기다려야 하는 새벽 시간대는 운행 종료로 취급.
+
+  // if (departure === firstDeparture && remainingSeconds > 60 * 60) {
+  //   return null;
+  // }
+
   return {
     departure,
-    remainingMinutes: departure.minutesFromMidnight - nowMinutes,
+    remainingSeconds,
+    remainingMinutes: Math.floor(remainingSeconds / 60),
     arrivalTimeLabel: formatTimeLabel(departure.hour, departure.minute),
   };
 }

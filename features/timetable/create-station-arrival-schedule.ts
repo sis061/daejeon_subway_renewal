@@ -1,7 +1,7 @@
 /*
  * 4. 사용자가 선택한 역의 데이터만 선별
  * 5. 평일/휴일, 상행/하행으로 데이터 분류
- * 6. 시간대 별로 묶여있는 데이터 => 열차 한 대 단위로 재정렬 (DepartureTime[]) + 자정부터의 출발시간을 분 으로 변경 (minutesFromMidnight)
+ * 6. 시간대 별로 묶여있는 데이터 => 열차 한 대 단위로 재정렬 (DepartureTime[]) + 자정부터의 출발시간을 분 단위값으로 변경 (minutesFromMidnight)
  * @return StationArrivalSchedule
  */
 
@@ -25,7 +25,6 @@ function createEmptyDirectionSchedule(): DirectionDepartureSchedule {
 }
 
 // 평일/주말(공휴일) 빈 배열 만들기 -> 평일/상행, 평일/하행, 주말/상행, 주말/하행
-
 function createEmptyStationSchedules(): StationDepartureSchedules {
   return {
     weekday: createEmptyDirectionSchedule(),
@@ -33,20 +32,48 @@ function createEmptyStationSchedules(): StationDepartureSchedules {
   };
 }
 
-// 정규화된 서버에서 받은 값을 시간 데이터로 바꿈
+// API에 행선지 메모가 있으면 그 값을 쓰고, 없으면 방향 기준 종착역을 기본값으로 사용
+function getFinalDestination(
+  direction: TimetableItem["direction"],
+  destination: string | null,
+): string {
+  if (destination) {
+    return destination;
+  }
 
+  if (direction === "towardBanseok") {
+    return "반석";
+  } else {
+    return "판암";
+  }
+}
+
+// 정규화된 서버 값을 클라이언트에서 바로 비교할 수 있는 열차 단위 시간 데이터로 바꿈
 function toDepartureTimes(item: TimetableItem): DepartureTime[] {
   return item.minutes.map((minute) => ({
     hour: item.hour,
     minute: minute.minute,
-    note: minute.note,
+    finalDestination: getFinalDestination(
+      item.direction,
+      minute.finalDestination,
+    ),
+    // 괄호 안 행선지가 있는 값은 API에서 막차성 단축 운행을 알려주는 데이터
+    isLastTrain: Boolean(minute.finalDestination),
     raw: minute.raw,
     minutesFromMidnight: item.hour * 60 + minute.minute,
   }));
 }
 
-// 상행, 하행 각각 도착 시간 순서대로 정렬
+// API가 막차 표시를 주지 않는 방향도 있어서, 정렬된 목록의 마지막 열차를 막차로 보정
+function markLastDeparture(departures: DepartureTime[]) {
+  const lastDeparture = departures.at(-1);
 
+  if (lastDeparture) {
+    lastDeparture.isLastTrain = true;
+  }
+}
+
+// 방향별 시간표를 자정 기준 분 단위값으로 오름차순 정렬
 function sortDepartures(schedule: DirectionDepartureSchedule) {
   schedule.towardPanam.sort(
     (a, b) => a.minutesFromMidnight - b.minutesFromMidnight,
@@ -54,6 +81,13 @@ function sortDepartures(schedule: DirectionDepartureSchedule) {
   schedule.towardBanseok.sort(
     (a, b) => a.minutesFromMidnight - b.minutesFromMidnight,
   );
+}
+
+// 상행, 하행 각각 도착 시간 순서대로 정렬한 뒤 각 방향의 마지막 열차를 막차로 표시
+function finalizeDepartures(schedule: DirectionDepartureSchedule) {
+  sortDepartures(schedule);
+  markLastDeparture(schedule.towardPanam);
+  markLastDeparture(schedule.towardBanseok);
 }
 
 // URL 파라미터로 받은 특정 역의 시간표를 retrun. DepartureTime 타입에 맞게 클라이언트에서 쉽게 현재시각과 비교할 수 있음.
@@ -77,8 +111,8 @@ export function createStationArrivalSchedule(
     schedules[item.dayType][item.direction].push(...toDepartureTimes(item));
   });
 
-  sortDepartures(schedules.weekday);
-  sortDepartures(schedules.holiday);
+  finalizeDepartures(schedules.weekday);
+  finalizeDepartures(schedules.holiday);
 
   return {
     stationId: station.id,
