@@ -31,9 +31,9 @@ export function getNextDeparture(
 
   const remainingSeconds = departure.minutesFromMidnight * 60 - nowSeconds;
 
-  // 첫차까지 60분을 넘게 기다려야 하는 새벽 시간대는 운행 종료로 취급.
+  // 첫차까지 99분을 넘게 기다려야 하는 새벽 시간대는 운행 종료로 취급.
 
-  if (departure === firstDeparture && remainingSeconds > 60 * 60) {
+  if (departure === firstDeparture && remainingSeconds > 99 * 60) {
     return null;
   }
 

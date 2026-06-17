@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { stations } from "@/data/stations";
 import clsx from "clsx";
+import { useEffect, useRef } from "react";
 
 function getSelectedStationId(pathname: string) {
   return pathname.match(/\/stations\/(\d+)/)?.[1] ?? null;
@@ -12,6 +13,14 @@ function getSelectedStationId(pathname: string) {
 export default function RailMap() {
   const pathname = usePathname();
   const selectedStationId = getSelectedStationId(pathname);
+  const selectedStationRef = useRef<HTMLAnchorElement | null>(null);
+
+  useEffect(() => {
+    selectedStationRef.current?.scrollIntoView({
+      block: "center",
+      behavior: "smooth",
+    });
+  }, [selectedStationId]);
 
   return (
     <div className=" w-full h-full flex flex-col items-center overflow-y-auto !p-2 relative">
@@ -24,6 +33,7 @@ export default function RailMap() {
             <Link
               href={`/stations/${station.id}`}
               key={station.id}
+              ref={isSelected ? selectedStationRef : null}
               className="relative flex items-center justify-end w-full !pr-2 group "
             >
               {!isLast && (

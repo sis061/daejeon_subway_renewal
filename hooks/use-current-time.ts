@@ -13,5 +13,9 @@ export function useCurrentTime(intervalMs = 30_000) {
     return () => window.clearInterval(intervalId);
   }, [intervalMs]);
 
-  return now;
+  const refreshNow = () => {
+    setNow(new Date());
+  };
+
+  return { now, refreshNow };
 }

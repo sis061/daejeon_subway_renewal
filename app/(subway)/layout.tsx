@@ -11,7 +11,7 @@ export default function SubwayLayout({
 }>) {
   return (
     <main className="wrapper">
-      <div className="inner min-h-[calc(100dvh)] h-screen !mx-auto !w-full !p-2 border">
+      <div className="inner min-h-[calc(100dvh)] h-screen !mx-auto !w-full !p-2">
         {children}
         <div className="flex w-full min-h-full h-full items-center justify-between">
           <section className="w-[65%] h-full min-w-0">{detail}</section>

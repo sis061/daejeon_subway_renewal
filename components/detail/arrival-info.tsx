@@ -10,7 +10,7 @@ import type {
 import { Station, stations } from "@/data/stations";
 import { useCurrentTime } from "@/hooks/use-current-time";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import clsx from "clsx";
 
 type ArrivalInfoProps = {
@@ -46,7 +46,7 @@ export default function ArrivalInfo({
   schedule,
   holidays = [],
 }: ArrivalInfoProps) {
-  const now = useCurrentTime();
+  const { now, refreshNow } = useCurrentTime();
 
   if (!schedule) {
     return <div>역을 선택해 주세요.</div>;
@@ -61,9 +61,9 @@ export default function ArrivalInfo({
   const nearStations = getNearStationInfo(stations, schedule.stationId);
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-12 !px-2">
-      <div className="w-full flex flex-col items-start gap-2 !px-4">
-        <div className="flex items-center gap-1">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-12 !px-2 ">
+      <div className="w-full flex flex-col items-start gap-2 !px-4 relative">
+        <div className="flex items-center gap-1 ">
           <span className="!text-daejeon-ink/75 font-semibold">
             {nextDepartures.towardPanam
               ? nextDepartures.towardPanam?.departure.finalDestination
@@ -74,9 +74,27 @@ export default function ArrivalInfo({
             <span className="!text-blue-500 text-sm">(막)</span>
           )}
         </div>
-        <span className="text-4xl font-bold !text-daejeon-ink">
-          {formatRemainingTime(nextDepartures.towardPanam)}
-        </span>
+        <div className="flex items-end gap-2">
+          <span className="text-4xl font-bold !text-daejeon-ink">
+            {formatRemainingTime(nextDepartures.towardPanam)}
+          </span>
+          {nextDepartures.towardPanam && (
+            <span className="!text-daejeon-ink/50">
+              {nextDepartures.towardPanam?.arrivalTimeLabel}{" "}
+            </span>
+          )}
+        </div>
+        <button
+          onClick={refreshNow}
+          className="absolute -top-2 right-0 z-20 cursor-pointer active:scale-95 ease-in-out duration-150 transition-all"
+        >
+          <RotateCcw
+            size={20}
+            color="#333"
+            strokeWidth={2.5}
+            className="shrink-0 drop-shadow-2xl"
+          />
+        </button>
       </div>
       <div className="relative flex h-21 w-full items-center justify-center [--station-nav-width:clamp(6.75rem,34%,10rem)] drop-shadow-sm">
         <div
@@ -90,7 +108,12 @@ export default function ArrivalInfo({
               href={`/stations/${nearStations.previousStation?.id}`}
               className="flex h-full items-center justify-start overflow-hidden"
             >
-              <ChevronLeft size={16} color="#fafafa" className="shrink-0" />
+              <ChevronLeft
+                size={16}
+                color="#4f5350"
+                stroke="4"
+                className="shrink-0"
+              />
               <span className="min-w-0 truncate text-left text-xs !text-daejeon-bg">
                 {nearStations.previousStation?.name}
               </span>
@@ -137,9 +160,17 @@ export default function ArrivalInfo({
             <span className="!text-blue-500 text-sm">(막)</span>
           )}
         </div>
-        <span className="text-4xl font-bold !text-daejeon-ink">
-          {formatRemainingTime(nextDepartures.towardBanseok)}
-        </span>
+        <div className="flex items-end gap-2">
+          {nextDepartures.towardBanseok && (
+            <span className="!text-daejeon-ink/50">
+              {nextDepartures.towardBanseok?.arrivalTimeLabel}{" "}
+            </span>
+          )}
+
+          <span className="text-4xl font-bold !text-daejeon-ink">
+            {formatRemainingTime(nextDepartures.towardBanseok)}
+          </span>
+        </div>
       </div>
     </div>
   );
