@@ -1,3 +1,7 @@
+/*
+ * 3. api에서 받은 데이터를 서버 사이드에서 쓰기 편하게 정규화
+ */
+
 import type {
   RawTimetableItem,
   ServiceDayType,
@@ -6,7 +10,9 @@ import type {
   TrainDirection,
 } from "./timetable.types";
 
-export function normalizeDayType(dayType: RawTimetableItem["dayType"]): ServiceDayType {
+export function normalizeDayType(
+  dayType: RawTimetableItem["dayType"],
+): ServiceDayType {
   return dayType === "0" ? "weekday" : "holiday";
 }
 
@@ -40,6 +46,8 @@ export function normalizeTimetableItem(raw: RawTimetableItem): TimetableItem {
   };
 }
 
-export function normalizeTimetable(rawItems: RawTimetableItem[]): TimetableItem[] {
+export function normalizeTimetable(
+  rawItems: RawTimetableItem[],
+): TimetableItem[] {
   return rawItems.map(normalizeTimetableItem);
 }

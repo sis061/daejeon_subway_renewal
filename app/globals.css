@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+@theme {
+  --color-daejeon-line: #007448;
+  --color-daejeon-line-hover: #00834c;
+  --color-daejeon-line-soft: #e6f3ed;
+  --color-daejeon-line-muted: #6fa88f;
+  --color-daejeon-ink: #10251c;
+  --color-daejeon-bg: #fafafa;
+}
+
+:root {
+  --daejeon-line: #007448;
+  --daejeon-line-hover: #00834c;
+  --daejeon-line-soft: #e6f3ed;
+  --daejeon-line-muted: #6fa88f;
+  --daejeon-ink: #10251c;
+  --daejeon-bg: #fafafa;
+}
+
 /** initialization **/
 
 * {
@@ -18,7 +36,7 @@
 html,
 body {
   max-width: 100vw;
-  background-color: #fafafa;
+  background-color: var(--daejeon-bg);
   @apply font-sans;
 }
 

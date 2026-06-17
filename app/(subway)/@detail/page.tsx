@@ -1,3 +1,5 @@
+import ArrivalInfo from "@/components/detail/arrival-info";
+
 export default function DetailPage() {
-  return <div>역 상세정보</div>;
+  return <ArrivalInfo schedule={null} />;
 }

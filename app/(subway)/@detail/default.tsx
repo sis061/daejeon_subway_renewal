@@ -1,3 +1,5 @@
+import ArrivalInfo from "@/components/detail/arrival-info";
+
 export default function Default() {
-  return null;
+  return <ArrivalInfo schedule={null} />;
 }
