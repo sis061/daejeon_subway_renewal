@@ -62,7 +62,12 @@ export default function ArrivalInfo({
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-12 !px-2 ">
-      <div className="w-full flex flex-col items-start gap-2 !px-4 relative">
+      <div
+        className={clsx(
+          !nextDepartures.towardPanam && "opacity-0",
+          "w-full flex flex-col items-start gap-2 !px-4 relative",
+        )}
+      >
         <div className="flex items-center gap-1 ">
           <span className="!text-daejeon-ink/75 font-semibold">
             {nextDepartures.towardPanam
@@ -108,12 +113,7 @@ export default function ArrivalInfo({
               href={`/stations/${nearStations.previousStation?.id}`}
               className="flex h-full items-center justify-start overflow-hidden"
             >
-              <ChevronLeft
-                size={16}
-                color="#4f5350"
-                stroke="4"
-                className="shrink-0"
-              />
+              <ChevronLeft size={16} color="#fafafa" className="shrink-0" />
               <span className="min-w-0 truncate text-left text-xs !text-daejeon-bg">
                 {nearStations.previousStation?.name}
               </span>
@@ -148,7 +148,12 @@ export default function ArrivalInfo({
           )}
         </div>
       </div>
-      <div className="w-full flex flex-col items-end gap-2 !px-4">
+      <div
+        className={clsx(
+          !nextDepartures.towardBanseok && "opacity-0",
+          "w-full flex flex-col items-end gap-2 !px-4",
+        )}
+      >
         <div className="flex items-center gap-1">
           <span className="!text-daejeon-ink/75 font-semibold">
             {nextDepartures.towardBanseok
@@ -156,7 +161,7 @@ export default function ArrivalInfo({
               : "반석"}
             행
           </span>
-          {nextDepartures.towardPanam?.departure.isLastTrain && (
+          {nextDepartures.towardBanseok?.departure.isLastTrain && (
             <span className="!text-blue-500 text-sm">(막)</span>
           )}
         </div>
