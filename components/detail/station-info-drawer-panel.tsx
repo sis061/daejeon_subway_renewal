@@ -81,7 +81,11 @@ export default function StationInfoDrawerPanel({
 
   if (fetchState.isLoading) {
     return (
-      <section className="flex h-full w-full items-center justify-center !px-6">
+      <section
+        role="status"
+        aria-live="polite"
+        className="flex h-full w-full items-center justify-center !px-6"
+      >
         <p className="text-sm font-semibold !text-daejeon-ink/40">
           역 상세정보를 불러오는 중입니다.
         </p>
@@ -91,7 +95,10 @@ export default function StationInfoDrawerPanel({
 
   if (fetchState.errorMessage) {
     return (
-      <section className="flex h-full w-full items-center justify-center !px-6">
+      <section
+        role="alert"
+        className="flex h-full w-full items-center justify-center !px-6"
+      >
         <p className="text-sm font-semibold !text-daejeon-ink/40">
           {fetchState.errorMessage}
         </p>

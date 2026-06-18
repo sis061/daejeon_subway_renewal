@@ -25,9 +25,10 @@ export default function StationAddressCopyButton({
     <button
       type="button"
       onClick={copyAddress}
+      aria-label="역 주소 복사"
       className="!ml-2 text-xs font-bold !text-blue-500 active:scale-95"
     >
-      {isCopied ? "복사됨" : "복사"}
+      <span aria-live="polite">{isCopied ? "복사됨" : "복사"}</span>
     </button>
   );
 }

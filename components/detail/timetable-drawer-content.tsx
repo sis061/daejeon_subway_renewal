@@ -126,6 +126,7 @@ export default function TimetableDrawerContent({
               key={type}
               type="button"
               onClick={() => setDayType(type)}
+              aria-pressed={dayType === type}
               variant={dayType === type ? "default" : "ghost"}
               className={clsx(
                 "shadow-xs !px-4 !py-2 text-xs font-semibold",

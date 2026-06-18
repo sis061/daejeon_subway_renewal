@@ -54,6 +54,20 @@ function getNearStationInfo(stations: Station[], stationId: number) {
   };
 }
 
+function getScreenReaderDepartureText(
+  directionLabel: string,
+  nextDeparture: NextDeparture | null,
+) {
+  if (!nextDeparture) {
+    return `${directionLabel}은 운행 종료입니다.`;
+  }
+
+  const finalDestination = nextDeparture.departure.finalDestination;
+  const lastTrainText = nextDeparture.departure.isLastTrain ? " 막차" : "";
+
+  return `${directionLabel} ${finalDestination}행${lastTrainText}은 ${formatRemainingTime(nextDeparture)}, 예정 시각은 ${nextDeparture.arrivalTimeLabel}입니다.`;
+}
+
 export default function ArrivalInfo({
   schedule,
   holidays = [],
@@ -76,6 +90,7 @@ export default function ArrivalInfo({
               size={24}
               strokeWidth={2.5}
               color="#4f535050"
+              aria-hidden="true"
               className="!text-daejeon-line shrink-0 animate-pulse !-mt-0.5"
             />
           </div>
@@ -96,9 +111,16 @@ export default function ArrivalInfo({
   );
   const nearStations = getNearStationInfo(stations, schedule.stationId);
   const lineNumber = String(schedule.stationId)[0];
+  const screenReaderArrivalText = `${schedule.stationName}역 다음 열차 정보입니다. ${getScreenReaderDepartureText("판암 방면", nextDepartures.towardPanam)} ${getScreenReaderDepartureText("반석 방면", nextDepartures.towardBanseok)}`;
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-12 !px-2">
+    <div
+      className="flex h-full w-full flex-col items-center justify-center gap-12 !px-2"
+      aria-label={`${schedule.stationName}역 다음 열차 정보`}
+    >
+      <p className="sr-only" aria-live="polite">
+        {screenReaderArrivalText}
+      </p>
       <div className="w-full flex flex-col items-start gap-2 !px-4 relative !mt-20">
         <div
           className={clsx(
@@ -132,13 +154,16 @@ export default function ArrivalInfo({
           )}
         </div>
         <button
+          type="button"
           onClick={refreshNow}
+          aria-label="현재 시각 기준으로 도착정보 다시 계산"
           className="absolute -top-2 right-0 z-20 cursor-pointer active:scale-95 ease-in-out duration-150 transition-all"
         >
           <RotateCcw
             size={20}
-            color="#333"
             strokeWidth={2.5}
+            color="#4f535075"
+            aria-hidden="true"
             className="shrink-0 drop-shadow-2xl"
           />
         </button>
@@ -153,9 +178,15 @@ export default function ArrivalInfo({
           {nearStations.previousStation && (
             <Link
               href={`/stations/${nearStations.previousStation?.id}`}
+              aria-label={`${nearStations.previousStation.name}역 도착정보 보기`}
               className="flex h-full items-center justify-start overflow-hidden"
             >
-              <ChevronLeft size={16} color="#fafafa" className="shrink-0" />
+              <ChevronLeft
+                size={16}
+                color="#fafafa"
+                aria-hidden="true"
+                className="shrink-0"
+              />
               <span className="min-w-0 truncate text-left text-xs !text-daejeon-bg">
                 {nearStations.previousStation?.name}
               </span>
@@ -163,7 +194,10 @@ export default function ArrivalInfo({
           )}
         </div>
         <div className="z-20 min-w-[150px] rounded-4xl border-[3px] border-daejeon-line bg-daejeon-bg !px-2 !py-1 text-center relative">
-          <span className="bg-daejeon-line size-5 text-sm inline-block font-bold rounded-full !text-daejeon-bg absolute left-1 top-2">
+          <span
+            aria-hidden="true"
+            className="bg-daejeon-line size-5 text-sm inline-block font-bold rounded-full !text-daejeon-bg absolute left-1 top-2"
+          >
             {lineNumber}
           </span>
           <span className="text-lg whitespace-nowrap !text-daejeon-ink font-semibold !pl-3">
@@ -180,12 +214,18 @@ export default function ArrivalInfo({
           {nearStations.nextStation && (
             <Link
               href={`/stations/${nearStations.nextStation?.id}`}
+              aria-label={`${nearStations.nextStation.name}역 도착정보 보기`}
               className="flex h-full items-center justify-end overflow-hidden"
             >
               <span className="min-w-0 truncate text-right text-xs !text-daejeon-bg">
                 {nearStations.nextStation?.name}
               </span>
-              <ChevronRight size={16} color="#fafafa" className="shrink-0" />
+              <ChevronRight
+                size={16}
+                color="#fafafa"
+                aria-hidden="true"
+                className="shrink-0"
+              />
             </Link>
           )}
         </div>
@@ -224,17 +264,26 @@ export default function ArrivalInfo({
         <Button
           variant={"ghost"}
           className="shadow-xs !py-2 !px-4 w-22 !text-daejeon-ink/75 flex items-center justify-center"
+          aria-haspopup="dialog"
+          aria-expanded={open && drawerType === "information"}
           onClick={() => {
             setDrawerType("information");
             setOpen(!open);
           }}
         >
-          <Info size={6} className="shrink-0 !-mt-0.5" color="#4f535085" />
+          <Info
+            size={6}
+            aria-hidden="true"
+            className="shrink-0 !-mt-0.5"
+            color="#4f535085"
+          />
           상세정보
         </Button>
         <Button
           variant={"ghost"}
           className="shadow-xs !py-2 !px-4 w-22 !text-daejeon-ink/75 flex items-center justify-center"
+          aria-haspopup="dialog"
+          aria-expanded={open && drawerType === "timetable"}
           onClick={() => {
             setDrawerType("timetable");
             setOpen(!open);
@@ -242,6 +291,7 @@ export default function ArrivalInfo({
         >
           <CalendarDays
             size={6}
+            aria-hidden="true"
             className="shrink-0 !-mt-0.5"
             color="#4f535085"
           />

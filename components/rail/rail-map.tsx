@@ -23,8 +23,14 @@ export default function RailMap() {
   }, [selectedStationId]);
 
   return (
-    <div className=" w-full h-full flex flex-col items-center overflow-y-auto !p-2 relative">
-      <div className="grid min-h-full w-full [grid-template-rows:repeat(22,minmax(4.75rem,1fr))]">
+    <nav
+      aria-label="대전 도시철도 1호선 역 목록"
+      className=" w-full h-full flex flex-col items-center overflow-y-auto !p-2 relative"
+    >
+      <div
+        role="list"
+        className="grid min-h-full w-full [grid-template-rows:repeat(22,minmax(4.75rem,1fr))]"
+      >
         {stations.map((station, index) => {
           const isSelected = String(station.id) === selectedStationId;
           const isLast = index === stations.length - 1;
@@ -34,6 +40,9 @@ export default function RailMap() {
               href={`/stations/${station.id}`}
               key={station.id}
               ref={isSelected ? selectedStationRef : null}
+              role="listitem"
+              aria-current={isSelected ? "page" : undefined}
+              aria-label={`${station.name}역 도착정보 보기`}
               className="relative flex items-center justify-end w-full !pr-2 group "
             >
               {!isLast && (
@@ -43,6 +52,7 @@ export default function RailMap() {
                 />
               )}
               <span
+                aria-hidden="true"
                 className={clsx(
                   isSelected && "!bg-green-600 ",
                   "relative z-10 block size-6 rounded-full border-[3px] border-daejeon-line bg-daejeon-bg group-active:scale-95 ease-in-out duration-150 transition-all ",
@@ -60,6 +70,6 @@ export default function RailMap() {
           );
         })}
       </div>
-    </div>
+    </nav>
   );
 }
