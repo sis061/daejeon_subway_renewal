@@ -1,10 +1,14 @@
 "use client";
 
-import { getNextDeparturesByDirection } from "@/features/timetable/get-next-departures-by-direction";
+import {
+  getNextDeparturesByDirection,
+  type NextDeparturesByDirection,
+} from "@/features/timetable/get-next-departures-by-direction";
 import { getServiceDayType } from "@/features/timetable/service-day";
 import type { Holiday } from "@/features/holiday/holiday.types";
 import type {
   NextDeparture,
+  ServiceDayType,
   StationArrivalSchedule,
 } from "@/features/timetable/timetable.types";
 import { Station, stations } from "@/data/stations";
@@ -73,6 +77,11 @@ function joinScreenReaderDepartureTexts(texts: string[]) {
   return texts.length > 0 ? texts.join(" ") : "표시할 방향의 열차가 없습니다.";
 }
 
+const EMPTY_NEXT_DEPARTURES: NextDeparturesByDirection = {
+  towardPanam: null,
+  towardBanseok: null,
+};
+
 export default function ArrivalInfo({
   schedule,
   holidays = [],
@@ -108,12 +117,13 @@ export default function ArrivalInfo({
     );
   }
 
-  const serviceDayType = getServiceDayType(now, holidays);
-  const nextDepartures = getNextDeparturesByDirection(
-    schedule,
-    serviceDayType,
-    now,
-  );
+  // 현재 시각 기반 계산은 클라이언트 마운트 이후에만 수행해 hydration mismatch를 피한다.
+  const serviceDayType: ServiceDayType = now
+    ? getServiceDayType(now, holidays)
+    : "weekday";
+  const nextDepartures = now
+    ? getNextDeparturesByDirection(schedule, serviceDayType, now)
+    : EMPTY_NEXT_DEPARTURES;
   const nearStations = getNearStationInfo(stations, schedule.stationId);
   const lineNumber = String(schedule.stationId)[0];
   const showTowardPanam = schedule.stationId !== 101;
