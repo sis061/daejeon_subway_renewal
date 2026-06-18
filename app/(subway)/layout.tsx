@@ -1,4 +1,5 @@
 import React from "react";
+import AppFooter from "@/components/layout/app-footer";
 
 export default function SubwayLayout({
   children,
@@ -13,15 +14,16 @@ export default function SubwayLayout({
 }>) {
   return (
     <main className="wrapper">
-      <div className="inner min-h-[calc(100dvh)] h-screen !mx-auto !w-full !p-2">
+      <div className="inner min-h-[calc(100dvh)] h-screen !mx-auto !w-full !p-2 !pt-4">
         {children}
-        <div className="flex w-full min-h-full h-full items-center justify-between">
+        <div className="flex w-full h-[calc(100dvh-4.5rem)] min-h-0 items-center justify-between">
           <section className="flex w-[65%] h-full min-w-0 flex-col">
             <div className="shrink-0">{shortcuts}</div>
             <div className="min-h-0 flex-1">{detail}</div>
           </section>
           <aside className="w-[35%] h-full min-w-0 min-h-0">{rail}</aside>
         </div>
+        <AppFooter />
       </div>
     </main>
   );

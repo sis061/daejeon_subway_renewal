@@ -278,7 +278,7 @@ export default function ArrivalInfo({
         )}
       </div>
 
-      <div className="w-full min-h-8 flex items-center justify-center gap-4 ">
+      <div className="w-full min-h-8 flex items-center justify-center gap-4 !pl-2">
         <FavoriteStationButton
           stationId={schedule.stationId}
           stationName={schedule.stationName}

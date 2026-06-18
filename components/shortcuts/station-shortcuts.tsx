@@ -24,7 +24,7 @@ export default function StationShortcuts() {
   }, [hydrateStationShortcuts]);
 
   return (
-    <section aria-label="즐겨찾기 역" className="w-full !px-4 !pb-3 !pt-8">
+    <section aria-label="즐겨찾기 역" className="w-full !pl-4 !pb-3 !pt-8">
       <div className="flex min-h-16 flex-col justify-center gap-2">
         <div className="flex items-center gap-1">
           <Star
