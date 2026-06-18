@@ -10,7 +10,12 @@ import type {
 import { Station, stations } from "@/data/stations";
 import { useCurrentTime } from "@/hooks/use-current-time";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  CircleArrowRight,
+  RotateCcw,
+} from "lucide-react";
 import clsx from "clsx";
 
 type ArrivalInfoProps = {
@@ -49,7 +54,27 @@ export default function ArrivalInfo({
   const { now, refreshNow } = useCurrentTime();
 
   if (!schedule) {
-    return <div>역을 선택해 주세요.</div>;
+    return (
+      <div className="flex h-full w-full items-center justify-center !px-6">
+        <div className="flex flex-col gap-2 text-left">
+          <div className="flex items-center gap-2">
+            <p className="text-xl font-bold !text-daejeon-ink/40">
+              역을 선택하세요
+            </p>
+            <CircleArrowRight
+              size={24}
+              strokeWidth={2.5}
+              color="#4f535050"
+              className="!text-daejeon-line shrink-0 animate-pulse !-mt-0.5"
+            />
+          </div>
+          <p className="text-xs leading-4 !text-daejeon-ink/20">
+            오른쪽 노선도에서 역을 누르면 <br /> 다음 열차 정보를 바로 확인할 수
+            있습니다.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   const serviceDayType = getServiceDayType(now, holidays);
@@ -61,14 +86,14 @@ export default function ArrivalInfo({
   const nearStations = getNearStationInfo(stations, schedule.stationId);
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-12 !px-2 ">
-      <div
-        className={clsx(
-          !nextDepartures.towardPanam && "opacity-0",
-          "w-full flex flex-col items-start gap-2 !px-4 relative",
-        )}
-      >
-        <div className="flex items-center gap-1 ">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-12 !px-2">
+      <div className="w-full flex flex-col items-start gap-2 !px-4 relative">
+        <div
+          className={clsx(
+            !nextDepartures.towardPanam && "opacity-0",
+            "flex items-center gap-1 ",
+          )}
+        >
           <span className="!text-daejeon-ink/75 font-semibold">
             {nextDepartures.towardPanam
               ? nextDepartures.towardPanam?.departure.finalDestination
@@ -79,7 +104,12 @@ export default function ArrivalInfo({
             <span className="!text-blue-500 text-sm">(막)</span>
           )}
         </div>
-        <div className="flex items-end gap-2">
+        <div
+          className={clsx(
+            !nextDepartures.towardPanam && "opacity-0",
+            "flex items-end gap-2",
+          )}
+        >
           <span className="text-4xl font-bold !text-daejeon-ink">
             {formatRemainingTime(nextDepartures.towardPanam)}
           </span>
