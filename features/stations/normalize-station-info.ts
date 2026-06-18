@@ -19,12 +19,12 @@ export function normalizeStationInfoItem(raw: RawStationInfoItem): StationInfo {
     telephone: raw.stationTel,
     platform: raw.platform,
     screenDoor: raw.screenDoor,
-    structure: raw.stationStruct,
+    // structure: raw.stationStruct,
     toiletLocation: raw.toilet,
     elevatorFacility: raw.elevatorFac,
     unloadDoor: raw.unloadDoor,
-    origin: raw.stationOrigin,
-    pointInfo: raw.stationPointInfo,
+    // origin: raw.stationOrigin,
+    // pointInfo: raw.stationPointInfo,
     facilities: {
       hasBikeStorage: parseYn(raw.bikeStorageYn),
       hasElevator: parseYn(raw.elevatorYn),
@@ -38,6 +38,8 @@ export function normalizeStationInfoItem(raw: RawStationInfoItem): StationInfo {
   };
 }
 
-export function normalizeStationInfo(rawItems: RawStationInfoItem[]): StationInfo[] {
+export function normalizeStationInfo(
+  rawItems: RawStationInfoItem[],
+): StationInfo[] {
   return rawItems.map(normalizeStationInfoItem);
 }

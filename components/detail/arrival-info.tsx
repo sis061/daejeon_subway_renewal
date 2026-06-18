@@ -24,10 +24,12 @@ import { Button } from "../ui/button";
 import DrawerWrapper from "./drawer-wrapper";
 import StationInfoDrawerContent from "./station-info-drawer-content";
 import TimetableDrawerContent from "./timetable-drawer-content";
+import { StationInfo } from "@/features/stations/station-info.types";
 
 type ArrivalInfoProps = {
   schedule: StationArrivalSchedule | null;
   holidays?: Holiday[];
+  stationInfo?: StationInfo[] | null;
 };
 
 function formatRemainingTime(nextDeparture: NextDeparture | null) {
@@ -57,6 +59,7 @@ function getNearStationInfo(stations: Station[], stationId: number) {
 export default function ArrivalInfo({
   schedule,
   holidays = [],
+  stationInfo = [],
 }: ArrivalInfoProps) {
   const { now, refreshNow } = useCurrentTime();
   const [open, setOpen] = useState(false);
@@ -253,9 +256,13 @@ export default function ArrivalInfo({
           <TimetableDrawerContent
             schedule={schedule}
             serviceDayType={serviceDayType}
+            nextDepartures={nextDepartures}
           />
         ) : (
-          <StationInfoDrawerContent stationId={schedule.stationId} />
+          <StationInfoDrawerContent
+            stationId={schedule.stationId}
+            stationInfo={stationInfo}
+          />
         )}
       </DrawerWrapper>
     </div>

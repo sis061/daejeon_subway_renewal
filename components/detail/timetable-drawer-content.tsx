@@ -6,13 +6,16 @@ import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import type {
   DepartureTime,
+  NextDeparture,
   ServiceDayType,
   StationArrivalSchedule,
 } from "@/features/timetable/timetable.types";
+import { NextDeparturesByDirection } from "@/features/timetable/get-next-departures-by-direction";
 
 type TimetableDrawerContentProps = {
   schedule: StationArrivalSchedule;
   serviceDayType: ServiceDayType;
+  nextDepartures: NextDeparturesByDirection;
 };
 
 type HourlyDepartures = {
@@ -47,18 +50,17 @@ function groupByHour(departures: DepartureTime[]): HourlyDepartures[] {
 }
 
 function DirectionTimetable({
-  title,
   departures,
+  next,
 }: {
-  title: string;
   departures: DepartureTime[];
+  next?: NextDeparture | null;
 }) {
   const hourlyDepartures = useMemo(() => groupByHour(departures), [departures]);
 
   return (
     <section className="min-w-0 flex-1">
-      <h3 className="text-sm font-bold !text-daejeon-ink/70">{title}</h3>
-      <div className="!mt-3 flex flex-col gap-3">
+      <div className="flex flex-col gap-3">
         {hourlyDepartures.map(({ hour, departures }) => (
           <div key={hour} className="grid grid-cols-[2.25rem_1fr] gap-2">
             <span className="text-xs font-semibold !text-daejeon-ink/40">
@@ -68,12 +70,19 @@ function DirectionTimetable({
               {departures.map((departure) => (
                 <span
                   key={`${departure.hour}-${departure.minute}-${departure.raw}`}
-                  className=" !px-2 !py-1 text-xs font-semibold !text-daejeon-ink/70"
+                  className={clsx(
+                    next?.arrivalTimeLabel == formatDepartureTime(departure) &&
+                      "!text-blue-500",
+                    "!px-2 !py-1 text-xs font-semibold ",
+                  )}
+                  style={{
+                    color: "#4f535090",
+                  }}
                   title={`${departure.finalDestination}행`}
                 >
                   {formatDepartureTime(departure)}
                   {departure.isLastTrain && (
-                    <span className="!text-blue-500 !pl-1">
+                    <span className="!text-blue-500/75 !pl-1">
                       {departure.finalDestination}행 (막)
                     </span>
                   )}
@@ -90,6 +99,7 @@ function DirectionTimetable({
 export default function TimetableDrawerContent({
   schedule,
   serviceDayType,
+  nextDepartures,
 }: TimetableDrawerContentProps) {
   const [dayType, setDayType] = useState<ServiceDayType>(serviceDayType);
   const selectedSchedule = schedule.schedules[dayType];
@@ -130,16 +140,26 @@ export default function TimetableDrawerContent({
         </ButtonGroup>
       </div>
 
-      <div className="!mt-6 min-h-0 flex-1 overflow-y-auto !pb-6">
+      <div className="!mt-6 flex shrink-0 items-center gap-4">
+        <h3 className="min-w-0 flex-1 text-sm font-bold !text-daejeon-ink/70">
+          판암 방면
+        </h3>
+        <div className="w-px self-stretch bg-daejeon-line-soft" />
+        <h3 className="min-w-0 flex-1 text-sm font-bold !text-daejeon-ink/70">
+          반석 방면
+        </h3>
+      </div>
+
+      <div className="!mt-3 min-h-0 flex-1 overflow-y-auto !pb-6">
         <div className="flex items-start gap-4">
           <DirectionTimetable
-            title="판암 방면"
             departures={selectedSchedule.towardPanam}
+            next={nextDepartures.towardPanam}
           />
           <div className="min-h-full w-px self-stretch bg-daejeon-line-soft" />
           <DirectionTimetable
-            title="반석 방면"
             departures={selectedSchedule.towardBanseok}
+            next={nextDepartures.towardBanseok}
           />
         </div>
       </div>
