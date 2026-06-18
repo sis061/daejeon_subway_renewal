@@ -44,7 +44,7 @@ export default function StationShortcuts() {
               : ""}
           </span>
         </div>
-        <div className="flex max-h-15 min-h-8 flex-wrap items-center gap-1.5 overflow-y-auto md:max-h-none md:min-h-16">
+        <div className="flex max-h-24 min-h-8 flex-wrap items-center gap-1.5 overflow-y-auto md:max-h-none md:min-h-16">
           {/* localStorage 복원 전에는 서버/클라이언트 렌더 차이를 피하기 위해 칩을 그리지 않는다. */}
           {isHydrated && hasShortcuts
             ? shortcutStations.map((station) => (
