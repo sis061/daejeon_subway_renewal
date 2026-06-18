@@ -2,6 +2,7 @@ import ArrivalInfo from "@/components/detail/arrival-info";
 import { getMonthlyHolidays } from "@/features/holiday/holiday.api";
 import { getStationArrivalSchedule } from "@/features/timetable/get-station-arrival-schedule";
 import { getHolidayApiParams } from "@/features/timetable/service-day";
+import { notFound } from "next/navigation";
 
 type StationPageProps = {
   params: Promise<{
@@ -14,6 +15,10 @@ export default async function StationPage({ params }: StationPageProps) {
   const now = new Date();
   const holidayApiParams = getHolidayApiParams(now);
   const schedule = await getStationArrivalSchedule(Number(stationId));
+
+  if (!schedule) {
+    notFound();
+  }
 
   const holidays = await getMonthlyHolidays(holidayApiParams).catch(() => []);
 
