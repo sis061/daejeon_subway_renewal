@@ -1,7 +1,7 @@
 /*
- * 4. 사용자가 선택한 역의 데이터만 선별
- * 5. 평일/휴일, 상행/하행으로 데이터 분류
- * 6. 시간대 별로 묶여있는 데이터 => 열차 한 대 단위로 재정렬 (DepartureTime[]) + 자정부터의 출발시간을 분 단위값으로 변경 (minutesFromMidnight)
+ * 3. 사용자가 선택한 역의 데이터만 선별
+ * 4. 평일/휴일, 상행/하행으로 데이터 분류
+ * 5. 시간대 별로 묶여있는 데이터 => 열차 한 대 단위로 재정렬 (DepartureTime[]) + 자정부터의 출발시간을 분 단위값으로 변경 (minutesFromMidnight)
  * @return StationArrivalSchedule
  */
 

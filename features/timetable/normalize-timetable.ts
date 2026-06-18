@@ -1,5 +1,5 @@
 /*
- * 3. api에서 받은 데이터를 서버 사이드에서 쓰기 편하게 정규화
+ * 2. api에서 받은 데이터를 서버 사이드에서 쓰기 편하게 정규화
  */
 
 import type {
@@ -13,13 +13,13 @@ import type {
 export function normalizeDayType(
   dayType: RawTimetableItem["dayType"],
 ): ServiceDayType {
-  return dayType === "0" ? "weekday" : "holiday";
+  return String(dayType) === "0" ? "weekday" : "holiday";
 }
 
 export function normalizeDirection(
   drctType: RawTimetableItem["drctType"],
 ): TrainDirection {
-  return drctType === "0" ? "towardPanam" : "towardBanseok";
+  return String(drctType) === "0" ? "towardPanam" : "towardBanseok";
 }
 
 export function parseTimetableMinute(rawMinute: string): TimetableMinute {
@@ -37,7 +37,7 @@ export function parseTimetableMinute(rawMinute: string): TimetableMinute {
 }
 
 export function normalizeTimetableItem(raw: RawTimetableItem): TimetableItem {
-  const normalizeMinutes = raw.tmList
+  const normalizeMinutes = String(raw.tmList)
     .split(" ")
     .filter(Boolean)
     .map(parseTimetableMinute);

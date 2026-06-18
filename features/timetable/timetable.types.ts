@@ -1,10 +1,10 @@
 // 공공API getAllTimeTable 응답 원본 타입
 export type RawTimetableItem = {
-  dayType: "0" | "1";
-  drctType: "0" | "1";
-  stNum: string;
-  tmZone: string;
-  tmList: string;
+  dayType: "0" | "1" | 0 | 1;
+  drctType: "0" | "1" | 0 | 1;
+  stNum: string | number;
+  tmZone: string | number;
+  tmList: string | number;
 };
 
 // dayType 명시적으로 변경

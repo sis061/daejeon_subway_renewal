@@ -14,12 +14,12 @@ export default function DetailError({ reset }: DetailErrorProps) {
           <p className="text-xl font-bold !text-daejeon-ink/40">
             정보를 불러오지 못했습니다!
           </p>
-          <CircleAlert
+          {/* <CircleAlert
             size={24}
             strokeWidth={2.5}
             color="#4f535050"
             className="shrink-0 !-mt-0.5"
-          />
+          /> */}
         </div>
         <p className="text-xs leading-4 !text-daejeon-ink/20">
           네트워크 상태를 확인한 뒤 <br /> 다시 시도해 주세요.
