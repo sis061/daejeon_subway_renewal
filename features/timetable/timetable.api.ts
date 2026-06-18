@@ -64,5 +64,11 @@ export async function getAllTimeTable(): Promise<RawTimetableItem[]> {
 
   const data = (await response.json()) as Response;
 
+  const { resultCode, resultMsg } = data.response.header;
+
+  if (resultCode !== "00") {
+    throw new Error(`시간표 응답 오류: ${resultMsg}`);
+  }
+
   return toArray(data.response.body.items?.item);
 }

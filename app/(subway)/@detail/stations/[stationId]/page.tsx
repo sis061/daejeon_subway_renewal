@@ -12,9 +12,15 @@ type StationPageProps = {
 
 export default async function StationPage({ params }: StationPageProps) {
   const { stationId } = await params;
+  const stationIdNumber = Number(stationId);
+
+  if (!Number.isInteger(stationIdNumber)) {
+    notFound();
+  }
+
   const now = new Date();
   const holidayApiParams = getHolidayApiParams(now);
-  const schedule = await getStationArrivalSchedule(Number(stationId));
+  const schedule = await getStationArrivalSchedule(stationIdNumber);
 
   if (!schedule) {
     notFound();
