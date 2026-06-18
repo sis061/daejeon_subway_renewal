@@ -26,7 +26,7 @@ export default function StationShortcuts() {
   return (
     <section
       aria-label="즐겨찾기 역"
-      className="w-[110%] !pl-4 !pb-2 !pt-2 md:!pb-3 bg-blue-200"
+      className="w-[105%] !pl-4 !pb-2 !pt-2 md:!pb-3"
     >
       <div className="flex min-h-12 flex-col justify-center gap-2 md:min-h-16">
         <div className="flex items-center gap-1">
