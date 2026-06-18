@@ -24,6 +24,7 @@ import { Button } from "../ui/button";
 import DrawerWrapper from "./drawer-wrapper";
 import StationInfoDrawerPanel from "./station-info-drawer-panel";
 import TimetableDrawerContent from "./timetable-drawer-content";
+import FavoriteStationButton from "../shortcuts/favorite-station-button";
 
 type ArrivalInfoProps = {
   schedule: StationArrivalSchedule | null;
@@ -129,13 +130,13 @@ export default function ArrivalInfo({
 
   return (
     <div
-      className="flex h-full w-full flex-col items-center justify-center gap-12 !px-2"
+      className="flex h-full w-full flex-col items-center justify-center gap-12 !px-2 !-mt-8"
       aria-label={`${schedule.stationName}역 다음 열차 정보`}
     >
       <p className="sr-only" aria-live="polite">
         {screenReaderArrivalText}
       </p>
-      <div className="w-full flex flex-col items-start gap-2 !px-4 relative !mt-20">
+      <div className="w-full flex flex-col items-start gap-2 !px-4 relative">
         {showTowardPanam && (
           <>
             <div className="flex items-center gap-1 ">
@@ -277,10 +278,14 @@ export default function ArrivalInfo({
         )}
       </div>
 
-      <div className="w-full min-h-8 flex items-center justify-center gap-4">
+      <div className="w-full min-h-8 flex items-center justify-center gap-4 ">
+        <FavoriteStationButton
+          stationId={schedule.stationId}
+          stationName={schedule.stationName}
+        />
         <Button
           variant={"ghost"}
-          className="shadow-xs !py-2 !px-4 w-22 !text-daejeon-ink/75 flex items-center justify-center"
+          className="shadow-xs !py-2 !px-4 w-22 !text-daejeon-ink/75 flex items-center justify-center cursor-pointer"
           aria-haspopup="dialog"
           aria-expanded={open && drawerType === "information"}
           onClick={() => {
@@ -298,7 +303,7 @@ export default function ArrivalInfo({
         </Button>
         <Button
           variant={"ghost"}
-          className="shadow-xs !py-2 !px-4 w-22 !text-daejeon-ink/75 flex items-center justify-center"
+          className="shadow-xs !py-2 !px-4 w-22 !text-daejeon-ink/75 flex items-center justify-center cursor-pointer"
           aria-haspopup="dialog"
           aria-expanded={open && drawerType === "timetable"}
           onClick={() => {

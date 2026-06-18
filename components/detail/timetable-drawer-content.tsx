@@ -129,7 +129,7 @@ export default function TimetableDrawerContent({
               aria-pressed={dayType === type}
               variant={dayType === type ? "default" : "ghost"}
               className={clsx(
-                "shadow-xs !px-4 !py-2 text-xs font-semibold",
+                "shadow-xs !px-4 !py-2 text-xs font-semibold cursor-pointer",
                 dayType === type
                   ? "!bg-daejeon-line !text-daejeon-bg"
                   : "!text-daejeon-ink/60",
