@@ -23,7 +23,6 @@ import {
 import StationAddressCopyButton from "./station-address-copy-button";
 
 type StationInfoDrawerContentProps = {
-  stationId: number;
   stationInfo: StationInfo[] | null;
 };
 
@@ -88,7 +87,6 @@ function BooleanInfoItem({
 }
 
 export default function StationInfoDrawerContent({
-  stationId,
   stationInfo,
 }: StationInfoDrawerContentProps) {
   const info = stationInfo?.[0];
@@ -97,7 +95,7 @@ export default function StationInfoDrawerContent({
     return (
       <section className="flex h-full w-full items-center justify-center !px-6">
         <p className="text-sm font-semibold !text-daejeon-ink/40">
-          {stationId}번 역 상세정보를 불러오지 못했습니다.
+          역 상세정보를 불러오지 못했습니다.
         </p>
       </section>
     );

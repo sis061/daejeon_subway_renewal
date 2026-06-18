@@ -1,11 +1,11 @@
 import { normalizeStationInfo } from "./normalize-station-info";
-import { rawStationInfoMock } from "./station-info.mock";
+import { fetchStationInfo } from "./station-info-api";
 import { StationInfo } from "./station-info.types";
 
 export async function getStationInfo(
   stationId: number,
 ): Promise<StationInfo[] | null> {
-  const rawStationInfoData = rawStationInfoMock;
+  const rawStationInfoData = await fetchStationInfo(stationId);
   const stationInfo = normalizeStationInfo(rawStationInfoData);
 
   return stationInfo.filter((info) => info.stationId === stationId);

@@ -22,14 +22,12 @@ import clsx from "clsx";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import DrawerWrapper from "./drawer-wrapper";
-import StationInfoDrawerContent from "./station-info-drawer-content";
+import StationInfoDrawerPanel from "./station-info-drawer-panel";
 import TimetableDrawerContent from "./timetable-drawer-content";
-import { StationInfo } from "@/features/stations/station-info.types";
 
 type ArrivalInfoProps = {
   schedule: StationArrivalSchedule | null;
   holidays?: Holiday[];
-  stationInfo?: StationInfo[] | null;
 };
 
 function formatRemainingTime(nextDeparture: NextDeparture | null) {
@@ -59,7 +57,6 @@ function getNearStationInfo(stations: Station[], stationId: number) {
 export default function ArrivalInfo({
   schedule,
   holidays = [],
-  stationInfo = [],
 }: ArrivalInfoProps) {
   const { now, refreshNow } = useCurrentTime();
   const [open, setOpen] = useState(false);
@@ -102,7 +99,7 @@ export default function ArrivalInfo({
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-12 !px-2">
-      <div className="w-full flex flex-col items-start gap-2 !px-4 relative">
+      <div className="w-full flex flex-col items-start gap-2 !px-4 relative !mt-20">
         <div
           className={clsx(
             !nextDepartures.towardPanam && "opacity-0",
@@ -259,9 +256,9 @@ export default function ArrivalInfo({
             nextDepartures={nextDepartures}
           />
         ) : (
-          <StationInfoDrawerContent
+          <StationInfoDrawerPanel
             stationId={schedule.stationId}
-            stationInfo={stationInfo}
+            enabled={open && drawerType === "information"}
           />
         )}
       </DrawerWrapper>
