@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://daejeon-subway-arrival.vercel.app"),
   title: {
     default: "대전 지하철 NOW",
     template: "%s | 대전 지하철 NOW",
