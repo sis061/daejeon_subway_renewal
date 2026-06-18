@@ -140,7 +140,7 @@ export default function ArrivalInfo({
 
   return (
     <div
-      className="flex h-full w-full flex-col items-center justify-center gap-12 !px-2 !-mt-8"
+      className="flex h-full w-full flex-col items-center justify-center gap-6 !px-2 md:gap-12 md:!-mt-8"
       aria-label={`${schedule.stationName}역 다음 열차 정보`}
     >
       <p className="sr-only" aria-live="polite">

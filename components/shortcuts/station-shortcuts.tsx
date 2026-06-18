@@ -24,8 +24,11 @@ export default function StationShortcuts() {
   }, [hydrateStationShortcuts]);
 
   return (
-    <section aria-label="즐겨찾기 역" className="w-full !pl-4 !pb-3 !pt-8">
-      <div className="flex min-h-16 flex-col justify-center gap-2">
+    <section
+      aria-label="즐겨찾기 역"
+      className="w-full !pl-4 !pb-2 !pt-2 md:!pb-3"
+    >
+      <div className="flex min-h-12 flex-col justify-center gap-2 md:min-h-16">
         <div className="flex items-center gap-1">
           <Star
             size={14}
@@ -41,7 +44,7 @@ export default function StationShortcuts() {
               : ""}
           </span>
         </div>
-        <div className="flex flex-wrap min-h-16 items-center gap-1.5">
+        <div className="flex max-h-15 min-h-8 flex-wrap items-center gap-1.5 overflow-y-auto md:max-h-none md:min-h-16">
           {/* localStorage 복원 전에는 서버/클라이언트 렌더 차이를 피하기 위해 칩을 그리지 않는다. */}
           {isHydrated && hasShortcuts
             ? shortcutStations.map((station) => (
