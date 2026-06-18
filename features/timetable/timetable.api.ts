@@ -7,7 +7,7 @@
  * https://www.data.go.kr/data/15159278/openapi.do#/API%20%EB%AA%A9%EB%A1%9D/getAllTimeTable
  */
 
-import { RawTimetableItem } from "./timetable.types";
+import type { RawTimetableItem } from "./timetable.types";
 
 const TIMETABLE_API_URL =
   "https://apis.data.go.kr/B554695/TimeTableSVC/getAllTimeTable";
@@ -59,7 +59,7 @@ export async function getAllTimeTable(): Promise<RawTimetableItem[]> {
   );
 
   if (!response.ok) {
-    throw new Error(`열차 시간표 요청 실패 :${response.status}`);
+    throw new Error(`열차 시간표 요청 실패: ${response.status}`);
   }
 
   const data = (await response.json()) as Response;

@@ -1,4 +1,4 @@
-import { RawStationInfoItem } from "./station-info.types";
+import type { RawStationInfoItem } from "./station-info.types";
 
 const STATION_INFO_API_URL =
   "https://apis.data.go.kr/B554695/StationInfoSVC/getStationInfo";
@@ -38,7 +38,7 @@ export async function fetchStationInfo(
 ): Promise<RawStationInfoItem[]> {
   const serviceKey = getServiceKey();
   const searchParams = new URLSearchParams({
-    serviceKey: serviceKey,
+    serviceKey,
     stationcode: String(stationId),
     _type: "json",
   });
@@ -54,7 +54,7 @@ export async function fetchStationInfo(
   );
 
   if (!response.ok) {
-    throw new Error(`역 별 정보 조회 실패: ${response.status}`);
+    throw new Error(`역별 정보 조회 실패: ${response.status}`);
   }
 
   const data = (await response.json()) as Response;

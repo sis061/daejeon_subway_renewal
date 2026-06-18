@@ -20,12 +20,16 @@ export default function FavoriteStationButton({
   const toggleStationShortcut = useStationShortcutsStore(
     (state) => state.toggleStationShortcut,
   );
+  // localStorage 복원 전에는 서버 렌더와 같은 미선택 상태로 그려 hydration mismatch를 피한다.
+  const isVisibleShortcut = isHydrated && isShortcut;
 
   return (
     <button
       type="button"
-      aria-pressed={isShortcut}
-      aria-label={`${stationName}역 즐겨찾기 ${isShortcut ? "해제" : "추가"}`}
+      aria-pressed={isVisibleShortcut}
+      aria-label={`${stationName}역 즐겨찾기 ${
+        isVisibleShortcut ? "해제" : "추가"
+      }`}
       // localStorage 복원 전에는 현재 즐겨찾기 여부를 확정할 수 없어 잠시 비활성화한다.
       disabled={!isHydrated}
       onClick={() => toggleStationShortcut(stationId)}
@@ -34,7 +38,10 @@ export default function FavoriteStationButton({
       <Star
         size={17}
         aria-hidden="true"
-        className={clsx("stroke-yellow-500", isShortcut && "fill-yellow-500")}
+        className={clsx(
+          "stroke-yellow-500",
+          isVisibleShortcut && "fill-yellow-500",
+        )}
       />
     </button>
   );
