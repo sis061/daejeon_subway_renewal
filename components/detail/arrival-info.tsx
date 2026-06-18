@@ -11,12 +11,19 @@ import { Station, stations } from "@/data/stations";
 import { useCurrentTime } from "@/hooks/use-current-time";
 import Link from "next/link";
 import {
+  CalendarDays,
   ChevronLeft,
   ChevronRight,
   CircleArrowRight,
+  Info,
   RotateCcw,
 } from "lucide-react";
 import clsx from "clsx";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import DrawerWrapper from "./drawer-wrapper";
+import StationInfoDrawerContent from "./station-info-drawer-content";
+import TimetableDrawerContent from "./timetable-drawer-content";
 
 type ArrivalInfoProps = {
   schedule: StationArrivalSchedule | null;
@@ -52,6 +59,10 @@ export default function ArrivalInfo({
   holidays = [],
 }: ArrivalInfoProps) {
   const { now, refreshNow } = useCurrentTime();
+  const [open, setOpen] = useState(false);
+  const [drawerType, setDrawerType] = useState<"information" | "timetable">(
+    "timetable",
+  );
 
   if (!schedule) {
     return (
@@ -84,6 +95,7 @@ export default function ArrivalInfo({
     now,
   );
   const nearStations = getNearStationInfo(stations, schedule.stationId);
+  const lineNumber = String(schedule.stationId)[0];
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-12 !px-2">
@@ -151,8 +163,8 @@ export default function ArrivalInfo({
           )}
         </div>
         <div className="z-20 min-w-[150px] rounded-4xl border-[3px] border-daejeon-line bg-daejeon-bg !px-2 !py-1 text-center relative">
-          <span className="bg-daejeon-line size-5 text-sm inline-block font-semibold rounded-full !text-daejeon-bg absolute left-1 top-2">
-            1
+          <span className="bg-daejeon-line size-5 text-sm inline-block font-bold rounded-full !text-daejeon-bg absolute left-1 top-2">
+            {lineNumber}
           </span>
           <span className="text-lg whitespace-nowrap !text-daejeon-ink font-semibold !pl-3">
             {schedule.stationName}
@@ -207,6 +219,45 @@ export default function ArrivalInfo({
           </span>
         </div>
       </div>
+
+      <div className="w-full min-h-8 flex items-center justify-center gap-4">
+        <Button
+          variant={"ghost"}
+          className="shadow-xs !py-2 !px-4 w-22 !text-daejeon-ink/75 flex items-center justify-center"
+          onClick={() => {
+            setDrawerType("information");
+            setOpen(!open);
+          }}
+        >
+          <Info size={6} className="shrink-0 !-mt-0.5" color="#4f535085" />
+          상세정보
+        </Button>
+        <Button
+          variant={"ghost"}
+          className="shadow-xs !py-2 !px-4 w-22 !text-daejeon-ink/75 flex items-center justify-center"
+          onClick={() => {
+            setDrawerType("timetable");
+            setOpen(!open);
+          }}
+        >
+          <CalendarDays
+            size={6}
+            className="shrink-0 !-mt-0.5"
+            color="#4f535085"
+          />
+          시간표
+        </Button>
+      </div>
+      <DrawerWrapper open={open} onOpenChange={setOpen}>
+        {drawerType === "timetable" ? (
+          <TimetableDrawerContent
+            schedule={schedule}
+            serviceDayType={serviceDayType}
+          />
+        ) : (
+          <StationInfoDrawerContent stationId={schedule.stationId} />
+        )}
+      </DrawerWrapper>
     </div>
   );
 }

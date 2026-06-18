@@ -11,7 +11,7 @@ export default function DetailError({ reset }: DetailErrorProps) {
     <div className="flex h-full w-full items-center justify-center !px-6">
       <div className="flex flex-col gap-2 text-left">
         <div className="flex items-center gap-2">
-          <p className="text-xl font-bold !text-daejeon-ink/40">
+          <p className="text-lg font-bold !text-daejeon-ink/40">
             정보를 불러오지 못했습니다!
           </p>
           {/* <CircleAlert
