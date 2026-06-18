@@ -36,7 +36,8 @@ export type DepartureTime = {
   finalDestination: string;
   isLastTrain: boolean;
   raw: string;
-  minutesFromMidnight: number; //이게 중요함 - 자정부터 도착시간까지의 시간을 분으로 계산
+  // 운행일 자정 기준 분 단위값. 24:18 같은 00시 이후 막차는 1458처럼 1440을 넘을 수 있다.
+  minutesFromMidnight: number;
 };
 
 // 도착정보 패널에서 쓰는 방향별 출발 시각 묶음

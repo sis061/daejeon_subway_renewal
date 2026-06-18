@@ -1,7 +1,7 @@
 /*
  * 3. 사용자가 선택한 역의 데이터만 선별
  * 4. 평일/휴일, 상행/하행으로 데이터 분류
- * 5. 시간대 별로 묶여있는 데이터 => 열차 한 대 단위로 재정렬 (DepartureTime[]) + 자정부터의 출발시간을 분 단위값으로 변경 (minutesFromMidnight)
+ * 5. 시간대 별로 묶여있는 데이터 => 열차 한 대 단위로 재정렬 (DepartureTime[]) + 운행일 기준 출발 시간을 분 단위값으로 변경 (minutesFromMidnight)
  * @return StationArrivalSchedule
  */
 
@@ -48,7 +48,8 @@ function getFinalDestination(
   }
 }
 
-// 정규화된 서버 값을 클라이언트에서 바로 비교할 수 있는 열차 단위 시간 데이터로 바꿈
+// 정규화된 서버 값을 클라이언트에서 바로 비교할 수 있는 열차 단위 시간 데이터로 바꿈.
+// 24:18 같은 00시 이후 막차는 1458분처럼 1440을 넘는 운행일 기준 값으로 유지한다.
 function toDepartureTimes(item: TimetableItem): DepartureTime[] {
   return item.minutes.map((minute) => ({
     hour: item.hour,
@@ -73,7 +74,7 @@ function markLastDeparture(departures: DepartureTime[]) {
   }
 }
 
-// 방향별 시간표를 자정 기준 분 단위값으로 오름차순 정렬
+// 방향별 시간표를 운행일 기준 분 단위값으로 오름차순 정렬
 function sortDepartures(schedule: DirectionDepartureSchedule) {
   schedule.towardPanam.sort(
     (a, b) => a.minutesFromMidnight - b.minutesFromMidnight,
@@ -90,8 +91,7 @@ function finalizeDepartures(schedule: DirectionDepartureSchedule) {
   markLastDeparture(schedule.towardBanseok);
 }
 
-// URL 파라미터로 받은 특정 역의 시간표를 retrun. DepartureTime 타입에 맞게 클라이언트에서 쉽게 현재시각과 비교할 수 있음.
-
+// URL 파라미터로 받은 특정 역의 시간표를 반환. DepartureTime 타입에 맞게 클라이언트에서 쉽게 현재 시각과 비교할 수 있음.
 export function createStationArrivalSchedule(
   stationId: number,
   timetable: TimetableItem[],

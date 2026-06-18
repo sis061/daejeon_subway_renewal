@@ -68,6 +68,10 @@ function getScreenReaderDepartureText(
   return `${directionLabel} ${finalDestination}행${lastTrainText}은 ${formatRemainingTime(nextDeparture)}, 예정 시각은 ${nextDeparture.arrivalTimeLabel}입니다.`;
 }
 
+function joinScreenReaderDepartureTexts(texts: string[]) {
+  return texts.length > 0 ? texts.join(" ") : "표시할 방향의 열차가 없습니다.";
+}
+
 export default function ArrivalInfo({
   schedule,
   holidays = [],
@@ -111,7 +115,17 @@ export default function ArrivalInfo({
   );
   const nearStations = getNearStationInfo(stations, schedule.stationId);
   const lineNumber = String(schedule.stationId)[0];
-  const screenReaderArrivalText = `${schedule.stationName}역 다음 열차 정보입니다. ${getScreenReaderDepartureText("판암 방면", nextDepartures.towardPanam)} ${getScreenReaderDepartureText("반석 방면", nextDepartures.towardBanseok)}`;
+  const showTowardPanam = schedule.stationId !== 101;
+  const showTowardBanseok = schedule.stationId !== 122;
+  const screenReaderDepartureTexts = [
+    showTowardPanam
+      ? getScreenReaderDepartureText("판암 방면", nextDepartures.towardPanam)
+      : null,
+    showTowardBanseok
+      ? getScreenReaderDepartureText("반석 방면", nextDepartures.towardBanseok)
+      : null,
+  ].filter((text) => text !== null);
+  const screenReaderArrivalText = `${schedule.stationName}역 다음 열차 정보입니다. ${joinScreenReaderDepartureTexts(screenReaderDepartureTexts)}`;
 
   return (
     <div
@@ -122,37 +136,36 @@ export default function ArrivalInfo({
         {screenReaderArrivalText}
       </p>
       <div className="w-full flex flex-col items-start gap-2 !px-4 relative !mt-20">
-        <div
-          className={clsx(
-            !nextDepartures.towardPanam && "opacity-0",
-            "flex items-center gap-1 ",
-          )}
-        >
-          <span className="!text-daejeon-ink/75 font-semibold">
-            {nextDepartures.towardPanam
-              ? nextDepartures.towardPanam?.departure.finalDestination
-              : "판암"}
-            행
+        {showTowardPanam && (
+          <>
+            <div className="flex items-center gap-1 ">
+              <span className="!text-daejeon-ink/75 font-semibold">
+                {nextDepartures.towardPanam
+                  ? nextDepartures.towardPanam?.departure.finalDestination
+                  : "판암"}
+                행
+              </span>
+              {nextDepartures.towardPanam?.departure.isLastTrain && (
+                <span className="!text-blue-500 text-sm">(막)</span>
+              )}
+            </div>
+            <div className="flex items-end gap-2">
+              <span className="text-4xl font-bold !text-daejeon-ink">
+                {formatRemainingTime(nextDepartures.towardPanam)}
+              </span>
+              {nextDepartures.towardPanam && (
+                <span className="!text-daejeon-ink/50">
+                  {nextDepartures.towardPanam?.arrivalTimeLabel}{" "}
+                </span>
+              )}
+            </div>
+          </>
+        )}
+        {!showTowardPanam && (
+          <span className="text-sm font-semibold !text-daejeon-ink/25 h-18 opacity-0">
+            판암 방면 종착역
           </span>
-          {nextDepartures.towardPanam?.departure.isLastTrain && (
-            <span className="!text-blue-500 text-sm">(막)</span>
-          )}
-        </div>
-        <div
-          className={clsx(
-            !nextDepartures.towardPanam && "opacity-0",
-            "flex items-end gap-2",
-          )}
-        >
-          <span className="text-4xl font-bold !text-daejeon-ink">
-            {formatRemainingTime(nextDepartures.towardPanam)}
-          </span>
-          {nextDepartures.towardPanam && (
-            <span className="!text-daejeon-ink/50">
-              {nextDepartures.towardPanam?.arrivalTimeLabel}{" "}
-            </span>
-          )}
-        </div>
+        )}
         <button
           type="button"
           onClick={refreshNow}
@@ -230,34 +243,38 @@ export default function ArrivalInfo({
           )}
         </div>
       </div>
-      <div
-        className={clsx(
-          !nextDepartures.towardBanseok && "opacity-0",
-          "w-full flex flex-col items-end gap-2 !px-4",
-        )}
-      >
-        <div className="flex items-center gap-1">
-          <span className="!text-daejeon-ink/75 font-semibold">
-            {nextDepartures.towardBanseok
-              ? nextDepartures.towardBanseok?.departure.finalDestination
-              : "반석"}
-            행
-          </span>
-          {nextDepartures.towardBanseok?.departure.isLastTrain && (
-            <span className="!text-blue-500 text-sm">(막)</span>
-          )}
-        </div>
-        <div className="flex items-end gap-2">
-          {nextDepartures.towardBanseok && (
-            <span className="!text-daejeon-ink/50">
-              {nextDepartures.towardBanseok?.arrivalTimeLabel}{" "}
-            </span>
-          )}
+      <div className="w-full flex flex-col items-end gap-2 !px-4">
+        {showTowardBanseok && (
+          <>
+            <div className="flex items-center gap-1">
+              <span className="!text-daejeon-ink/75 font-semibold">
+                {nextDepartures.towardBanseok
+                  ? nextDepartures.towardBanseok?.departure.finalDestination
+                  : "반석"}
+                행
+              </span>
+              {nextDepartures.towardBanseok?.departure.isLastTrain && (
+                <span className="!text-blue-500 text-sm">(막)</span>
+              )}
+            </div>
+            <div className="flex items-end gap-2">
+              {nextDepartures.towardBanseok && (
+                <span className="!text-daejeon-ink/50">
+                  {nextDepartures.towardBanseok?.arrivalTimeLabel}{" "}
+                </span>
+              )}
 
-          <span className="text-4xl font-bold !text-daejeon-ink">
-            {formatRemainingTime(nextDepartures.towardBanseok)}
+              <span className="text-4xl font-bold !text-daejeon-ink">
+                {formatRemainingTime(nextDepartures.towardBanseok)}
+              </span>
+            </div>
+          </>
+        )}
+        {!showTowardBanseok && (
+          <span className="text-sm font-semibold !text-daejeon-ink/25 h-18 opacity-0">
+            반석 방면 종착역
           </span>
-        </div>
+        )}
       </div>
 
       <div className="w-full min-h-8 flex items-center justify-center gap-4">
