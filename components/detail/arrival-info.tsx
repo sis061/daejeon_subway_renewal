@@ -68,9 +68,11 @@ function getScreenReaderDepartureText(
   }
 
   const finalDestination = nextDeparture.departure.finalDestination;
-  const lastTrainText = nextDeparture.departure.isLastTrain ? " 막차" : "";
+  const trainLabel = nextDeparture.departure.isLastTrain
+    ? `${finalDestination}행 막차는`
+    : `${finalDestination}행은`;
 
-  return `${directionLabel} ${finalDestination}행${lastTrainText}은 ${formatRemainingTime(nextDeparture)}, 예정 시각은 ${nextDeparture.arrivalTimeLabel}입니다.`;
+  return `${directionLabel} ${trainLabel} ${formatRemainingTime(nextDeparture)}, 예정 시각은 ${nextDeparture.arrivalTimeLabel}입니다.`;
 }
 
 function joinScreenReaderDepartureTexts(texts: string[]) {
@@ -146,6 +148,7 @@ export default function ArrivalInfo({
       <p className="sr-only" aria-live="polite">
         {screenReaderArrivalText}
       </p>
+      {/* ************* 판암행 도착정보 *************** */}
       <div className="w-full flex flex-col items-start gap-2 !px-4 relative">
         {showTowardPanam && (
           <>
@@ -177,6 +180,7 @@ export default function ArrivalInfo({
             판암 방면 종착역
           </span>
         )}
+        {/* ************* 새로고침 버튼 *************** */}
         <button
           type="button"
           onClick={refreshNow}
@@ -192,6 +196,7 @@ export default function ArrivalInfo({
           />
         </button>
       </div>
+      {/* ************* 가운데 역명 + 이전역 다음역 이동 btn *************** */}
       <div className="relative flex h-21 w-full items-center justify-center [--station-nav-width:clamp(6.75rem,34%,10rem)] drop-shadow-sm">
         <div
           className={clsx(
@@ -254,6 +259,7 @@ export default function ArrivalInfo({
           )}
         </div>
       </div>
+      {/* ************* 반석행 도착정보 *************** */}
       <div className="w-full flex flex-col items-end gap-2 !px-4">
         {showTowardBanseok && (
           <>
@@ -288,6 +294,7 @@ export default function ArrivalInfo({
         )}
       </div>
 
+      {/* ************* 하단 즐겨찾기, 역 상세정보 drawer, 시간표 drawer btn *************** */}
       <div className="w-full min-h-8 flex items-center justify-center gap-4 !pl-2">
         <FavoriteStationButton
           stationId={schedule.stationId}
