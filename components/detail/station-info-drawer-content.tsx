@@ -134,8 +134,8 @@ export default function StationInfoDrawerContent({
           />
           <TextInfoItem
             icon={Toilet}
-            label="화장실 개찰구"
-            value={info.toiletLocation}
+            label="화장실"
+            value={`개찰구 ${info.toiletLocation}`}
           />
         </InfoSection>
 
