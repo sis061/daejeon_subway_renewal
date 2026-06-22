@@ -21,6 +21,7 @@ import {
   getStationInfoValueClassName,
 } from "@/lib/station-info-ui";
 import StationAddressCopyButton from "./station-address-copy-button";
+import StationInfoMap from "./station-info-map";
 
 type StationInfoDrawerContentProps = {
   stationInfo: StationInfo[] | null;
@@ -211,6 +212,7 @@ export default function StationInfoDrawerContent({
               />
               <span className="!text-blue-500">{info.telephone}</span>
             </a>
+            <StationInfoMap address={info.address} />
           </div>
         </section>
       </div>
