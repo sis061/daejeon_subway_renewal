@@ -66,20 +66,44 @@ export default function StationInfoMap({ address }: StationInfoMapProps) {
   // 렌더 예외 처리
 
   if (!apiKey) {
-    return <div>카카오맵 API 키가 없습니다.</div>;
+    return (
+      <div className="!px-2 !py-1">
+        <p className="text-sm font-semibold !text-daejeon-ink/40">
+          카카오맵 API 키가 없습니다. 개발자에게 문의하세요.
+        </p>
+      </div>
+    );
   }
 
   if (loading || isCoordinateLoading) {
-    return <div>지도를 불러오는 중...</div>;
+    return (
+      <div className="!px-2 !py-1 animate-pulse">
+        <p className="text-sm font-semibold !text-daejeon-ink/40">
+          지도를 불러오는 중...
+        </p>
+      </div>
+    );
   }
 
   if (error) {
     console.log("error 발생: ", error);
-    return <div>지도를 불러오지 못했습니다.</div>;
+    return (
+      <div className="!px-2 !py-1">
+        <p className="text-sm font-semibold !text-daejeon-ink/40">
+          지도를 불러오지 못했습니다.
+        </p>
+      </div>
+    );
   }
 
   if (!coordinate) {
-    return <div>역 위치를 찾지 못했습니다.</div>;
+    return (
+      <div className="!px-2 !py-1">
+        <p className="text-sm font-bold !text-daejeon-ink/40">
+          역 위치를 찾지 못했습니다.
+        </p>
+      </div>
+    );
   }
 
   //render
