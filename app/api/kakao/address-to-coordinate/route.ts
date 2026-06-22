@@ -25,7 +25,6 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const address = searchParams.get("address")?.trim();
 
-  // 역 상세정보의 주소 문자열만 받아 좌표로 바꾼다. 클라이언트에는 REST API 키를 노출하지 않는다.
   if (!address) {
     return NextResponse.json(
       { message: "주소를 입력하세요." },
@@ -35,9 +34,11 @@ export async function GET(request: Request) {
 
   const kakaoSearchParams = new URLSearchParams({
     query: address,
+    // 지하철역 주소는 하나의 대표 좌표만 필요하므로 첫 번째 결과만 요청한다.
     size: "1",
   });
 
+  // 카카오 Local 주소 검색 API는 JavaScript 키가 아니라 REST API 키를 Authorization 헤더로 받는다. 헷갈리지 말것!
   const response = await fetch(
     `${KAKAO_ADDRESS_SEARCH_API_URL}?${kakaoSearchParams.toString()}`,
     {
@@ -45,6 +46,7 @@ export async function GET(request: Request) {
         Authorization: `KakaoAK ${getKakaoRestApiKey()}`,
       },
       next: {
+        // 역 주소와 좌표는 거의 바뀌지 않으므로 넉넉하게 캐싱해 외부 API 호출을 줄인다.
         revalidate: 60 * 60 * 24 * 30,
       },
     },

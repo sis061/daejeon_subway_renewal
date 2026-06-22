@@ -22,9 +22,12 @@ import {
 } from "@/lib/station-info-ui";
 import StationAddressCopyButton from "./station-address-copy-button";
 import StationInfoMap from "./station-info-map";
+import type { StationCoordinate } from "./station-info-map";
 
 type StationInfoDrawerContentProps = {
   stationInfo: StationInfo[] | null;
+  // 좌표 조회는 상위 패널에서 끝내고, 이 컴포넌트는 받은 데이터만 화면에 배치한다.
+  stationCoordinate: StationCoordinate | null;
 };
 
 type TextInfoItemProps = {
@@ -89,6 +92,7 @@ function BooleanInfoItem({
 
 export default function StationInfoDrawerContent({
   stationInfo,
+  stationCoordinate,
 }: StationInfoDrawerContentProps) {
   const info = stationInfo?.[0];
 
@@ -212,7 +216,8 @@ export default function StationInfoDrawerContent({
               />
               <span className="!text-blue-500">{info.telephone}</span>
             </a>
-            <StationInfoMap address={info.address} />
+            {/* 지도는 카카오 SDK 렌더링만 담당하고, 주소 기반 좌표 조회는 StationInfoDrawerPanel에서 처리한다. */}
+            <StationInfoMap coordinate={stationCoordinate} />
           </div>
         </section>
       </div>
