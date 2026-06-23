@@ -1,6 +1,11 @@
 "use client";
 
-import { Map, MapMarker, useKakaoLoader } from "react-kakao-maps-sdk";
+import {
+  Map,
+  MapMarker,
+  ZoomControl,
+  useKakaoLoader,
+} from "react-kakao-maps-sdk";
 
 type StationInfoMapProps = {
   // 부모에서 주소를 좌표로 변환한 뒤 넘긴다. 지도 컴포넌트는 추가 API 요청 없이 렌더링만 담당한다.
@@ -72,6 +77,7 @@ export default function StationInfoMap({ coordinate }: StationInfoMapProps) {
       level={4}
     >
       <MapMarker position={{ lat: coordinate?.lat, lng: coordinate?.lng }} />
+      <ZoomControl position="RIGHT" />
     </Map>
   );
 }
